@@ -10,6 +10,15 @@ import face_recognition
 
 ```
 
+## Environment
+
+This project uses a virtual Python environment (venv) to control which packages 
+have been downloaded and standardize across multiple machines.
+
+To activate: 
+    * navigate to /AISongRecommender
+    * ```console source AISongRec/bin/activate```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
