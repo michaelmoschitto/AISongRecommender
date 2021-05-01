@@ -17,7 +17,7 @@ have been downloaded and standardize across multiple machines.
 
 To activate: <br>
     * navigate to /AISongRecommender <br>
-    * ```console source AISongRec/bin/activate```
+    * ``` source AISongRec/bin/activate ```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
