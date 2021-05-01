@@ -16,7 +16,7 @@ This project uses a virtual Python environment (venv) to control which packages
 have been downloaded and standardize across multiple machines.
 
 To activate: <br>
-    * navigate to /AISongRecommender <br>
+    * ```cd /AISongRecommender ```<br>
     * ``` source AISongRec/bin/activate ```
 
 ## Contributing
