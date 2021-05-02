@@ -7,11 +7,7 @@ from .intranges import intranges_contain
 
 _virama_combining_class = 9
 _alabel_prefix = b'xn--'
-_unicode_dots_re = re.compile(u'[\u002e\u3002\uff0e\uff61]')
-
-if sys.version_info[0] == 3:
-    unicode = str
-    unichr = chr
+_unicode_dots_re = re.compile('[\u002e\u3002\uff0e\uff61]')
 
 class IDNAError(UnicodeError):
     """ Base exception for all IDNA-encoding related problems """
@@ -34,7 +30,11 @@ class InvalidCodepointContext(IDNAError):
 
 
 def _combining_class(cp):
-    return unicodedata.combining(unichr(cp))
+    v = unicodedata.combining(chr(cp))
+    if v == 0:
+        if not unicodedata.name(chr(cp)):
+            raise ValueError('Unknown character in unicodedata')
+    return v
 
 def _is_script(cp, script):
     return intranges_contain(ord(cp), idnadata.scripts[script])
@@ -43,7 +43,7 @@ def _punycode(s):
     return s.encode('punycode')
 
 def _unot(s):
-    return 'U+{0:04X}'.format(s)
+    return 'U+{:04X}'.format(s)
 
 
 def valid_label_length(label):
@@ -68,10 +68,9 @@ def check_bidi(label, check_ltr=False):
         direction = unicodedata.bidirectional(cp)
         if direction == '':
             # String likely comes from a newer version of Unicode
-            raise IDNABidiError('Unknown directionality in label {0} at position {1}'.format(repr(label), idx))
+            raise IDNABidiError('Unknown directionality in label {} at position {}'.format(repr(label), idx))
         if direction in ['R', 'AL', 'AN']:
             bidi_label = True
-            break
     if not bidi_label and not check_ltr:
         return True
 
@@ -82,7 +81,7 @@ def check_bidi(label, check_ltr=False):
     elif direction == 'L':
         rtl = False
     else:
-        raise IDNABidiError('First codepoint in label {0} must be directionality L, R or AL'.format(repr(label)))
+        raise IDNABidiError('First codepoint in label {} must be directionality L, R or AL'.format(repr(label)))
 
     valid_ending = False
     number_type = False
@@ -92,7 +91,7 @@ def check_bidi(label, check_ltr=False):
         if rtl:
             # Bidi rule 2
             if not direction in ['R', 'AL', 'AN', 'EN', 'ES', 'CS', 'ET', 'ON', 'BN', 'NSM']:
-                raise IDNABidiError('Invalid direction for codepoint at position {0} in a right-to-left label'.format(idx))
+                raise IDNABidiError('Invalid direction for codepoint at position {} in a right-to-left label'.format(idx))
             # Bidi rule 3
             if direction in ['R', 'AL', 'EN', 'AN']:
                 valid_ending = True
@@ -108,7 +107,7 @@ def check_bidi(label, check_ltr=False):
         else:
             # Bidi rule 5
             if not direction in ['L', 'EN', 'ES', 'CS', 'ET', 'ON', 'BN', 'NSM']:
-                raise IDNABidiError('Invalid direction for codepoint at position {0} in a left-to-right label'.format(idx))
+                raise IDNABidiError('Invalid direction for codepoint at position {} in a left-to-right label'.format(idx))
             # Bidi rule 6
             if direction in ['L', 'EN']:
                 valid_ending = True
@@ -209,7 +208,7 @@ def valid_contexto(label, pos, exception=False):
 
     elif cp_value == 0x30fb:
         for cp in label:
-            if cp == u'\u30fb':
+            if cp == '\u30fb':
                 continue
             if _is_script(cp, 'Hiragana') or _is_script(cp, 'Katakana') or _is_script(cp, 'Han'):
                 return True
@@ -244,13 +243,18 @@ def check_label(label):
         if intranges_contain(cp_value, idnadata.codepoint_classes['PVALID']):
             continue
         elif intranges_contain(cp_value, idnadata.codepoint_classes['CONTEXTJ']):
-            if not valid_contextj(label, pos):
-                raise InvalidCodepointContext('Joiner {0} not allowed at position {1} in {2}'.format(_unot(cp_value), pos+1, repr(label)))
+            try:
+                if not valid_contextj(label, pos):
+                    raise InvalidCodepointContext('Joiner {} not allowed at position {} in {}'.format(
+                        _unot(cp_value), pos+1, repr(label)))
+            except ValueError:
+                raise IDNAError('Unknown codepoint adjacent to joiner {} at position {} in {}'.format(
+                    _unot(cp_value), pos+1, repr(label)))
         elif intranges_contain(cp_value, idnadata.codepoint_classes['CONTEXTO']):
             if not valid_contexto(label, pos):
-                raise InvalidCodepointContext('Codepoint {0} not allowed at position {1} in {2}'.format(_unot(cp_value), pos+1, repr(label)))
+                raise InvalidCodepointContext('Codepoint {} not allowed at position {} in {}'.format(_unot(cp_value), pos+1, repr(label)))
         else:
-            raise InvalidCodepoint('Codepoint {0} at position {1} of {2} not allowed'.format(_unot(cp_value), pos+1, repr(label)))
+            raise InvalidCodepoint('Codepoint {} at position {} of {} not allowed'.format(_unot(cp_value), pos+1, repr(label)))
 
     check_bidi(label)
 
@@ -259,10 +263,7 @@ def alabel(label):
 
     try:
         label = label.encode('ascii')
-        try:
-            ulabel(label)
-        except IDNAError:
-            raise IDNAError('The label {0} is not a valid A-label'.format(label))
+        ulabel(label)
         if not valid_label_length(label):
             raise IDNAError('Label too long')
         return label
@@ -272,7 +273,7 @@ def alabel(label):
     if not label:
         raise IDNAError('No Input')
 
-    label = unicode(label)
+    label = str(label)
     check_label(label)
     label = _punycode(label)
     label = _alabel_prefix + label
@@ -295,6 +296,10 @@ def ulabel(label):
     label = label.lower()
     if label.startswith(_alabel_prefix):
         label = label[len(_alabel_prefix):]
+        if not label:
+            raise IDNAError('Malformed A-label, no Punycode eligible content found')
+        if label.decode('ascii')[-1] == '-':
+            raise IDNAError('A-label must not end with a hyphen')
     else:
         check_label(label)
         return label.decode('ascii')
@@ -307,35 +312,35 @@ def ulabel(label):
 def uts46_remap(domain, std3_rules=True, transitional=False):
     """Re-map the characters in the string according to UTS46 processing."""
     from .uts46data import uts46data
-    output = u""
+    output = ''
     try:
         for pos, char in enumerate(domain):
             code_point = ord(char)
             uts46row = uts46data[code_point if code_point < 256 else
-                bisect.bisect_left(uts46data, (code_point, "Z")) - 1]
+                bisect.bisect_left(uts46data, (code_point, 'Z')) - 1]
             status = uts46row[1]
             replacement = uts46row[2] if len(uts46row) == 3 else None
-            if (status == "V" or
-                    (status == "D" and not transitional) or
-                    (status == "3" and std3_rules and replacement is None)):
+            if (status == 'V' or
+                    (status == 'D' and not transitional) or
+                    (status == '3' and not std3_rules and replacement is None)):
                 output += char
-            elif replacement is not None and (status == "M" or
-                    (status == "3" and std3_rules) or
-                    (status == "D" and transitional)):
+            elif replacement is not None and (status == 'M' or
+                    (status == '3' and not std3_rules) or
+                    (status == 'D' and transitional)):
                 output += replacement
-            elif status != "I":
+            elif status != 'I':
                 raise IndexError()
-        return unicodedata.normalize("NFC", output)
+        return unicodedata.normalize('NFC', output)
     except IndexError:
         raise InvalidCodepoint(
-            "Codepoint {0} not allowed at position {1} in {2}".format(
+            'Codepoint {} not allowed at position {} in {}'.format(
             _unot(code_point), pos + 1, repr(domain)))
 
 
 def encode(s, strict=False, uts46=False, std3_rules=False, transitional=False):
 
     if isinstance(s, (bytes, bytearray)):
-        s = s.decode("ascii")
+        s = s.decode('ascii')
     if uts46:
         s = uts46_remap(s, std3_rules, transitional)
     trailing_dot = False
@@ -344,15 +349,17 @@ def encode(s, strict=False, uts46=False, std3_rules=False, transitional=False):
         labels = s.split('.')
     else:
         labels = _unicode_dots_re.split(s)
-    while labels and not labels[0]:
-        del labels[0]
-    if not labels:
+    if not labels or labels == ['']:
         raise IDNAError('Empty domain')
     if labels[-1] == '':
         del labels[-1]
         trailing_dot = True
     for label in labels:
-        result.append(alabel(label))
+        s = alabel(label)
+        if s:
+            result.append(s)
+        else:
+            raise IDNAError('Empty label')
     if trailing_dot:
         result.append(b'')
     s = b'.'.join(result)
@@ -364,7 +371,7 @@ def encode(s, strict=False, uts46=False, std3_rules=False, transitional=False):
 def decode(s, strict=False, uts46=False, std3_rules=False):
 
     if isinstance(s, (bytes, bytearray)):
-        s = s.decode("ascii")
+        s = s.decode('ascii')
     if uts46:
         s = uts46_remap(s, std3_rules, False)
     trailing_dot = False
@@ -372,16 +379,18 @@ def decode(s, strict=False, uts46=False, std3_rules=False):
     if not strict:
         labels = _unicode_dots_re.split(s)
     else:
-        labels = s.split(u'.')
-    while labels and not labels[0]:
-        del labels[0]
-    if not labels:
+        labels = s.split('.')
+    if not labels or labels == ['']:
         raise IDNAError('Empty domain')
     if not labels[-1]:
         del labels[-1]
         trailing_dot = True
     for label in labels:
-        result.append(ulabel(label))
+        s = ulabel(label)
+        if s:
+            result.append(s)
+        else:
+            raise IDNAError('Empty label')
     if trailing_dot:
-        result.append(u'')
-    return u'.'.join(result)
+        result.append('')
+    return '.'.join(result)
