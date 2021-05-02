@@ -73,10 +73,14 @@ class WrapperClass:
         names = [tuple[0] for tuple in trackList]
         uris = [tuple[1] for tuple in trackList]
 
-        return pd.DataFrame(data={'name' : names, 'uri' : uri})            
+        return pd.DataFrame(data={'name' : names, 'uri' : uris})            
         
 
-
+# w = WrapperClass()
+# w.doAuth()
+# print(w.getUsersPlaylists('mikeydays'))
+# print(w.getSongsFromPlaylist('0ZB9jG1uyCbs4rnQ1V5ro6', 'mikeydays'))
+# w.getSongsFromPlaylist('')
 
 # lz_uri = 'spotify:artist:36QJpDe2go2KgaRleHCDTp'
 
