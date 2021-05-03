@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "./AISongRec/bin/python"
+    "python.pythonPath": "powershellEnv\\Scripts\\python.exe",
+    "git.ignoreLimitWarning": true
 }
