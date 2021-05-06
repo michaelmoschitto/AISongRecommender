@@ -49,6 +49,26 @@ class WrapperClass:
         return pd.DataFrame({'name' : playlistNames, 'uri' : playlistUris}, \
          columns=['name', 'uri'])
 
+    def getName(self, results, nameArr):
+            tl = []
+            for i, item in enumerate(results['items']):
+                
+                track = item['track']
+                name = track['name']
+                uri = track['uri']
+
+                artistName = track['artists'][0]['name']
+
+                result = self.sp.search(artistName)
+                track = result['tracks']['items'][0]
+                artist = self.sp.artist(track["artists"][0]["external_urls"]["spotify"])
+                genres = artist["genres"]
+               
+
+                tl.append((name, uri.split(':')[2], genres))
+
+            return tl
+    
     def getSongsFromPlaylist(self, uri, username, name=""):
         ''' 
             Function: Get list of songs from certain playlist
@@ -56,31 +76,21 @@ class WrapperClass:
             Returns: Dataframe containing [song name, uri]
         '''
 
-        def getName(results, nameArr):
-            for i, item in enumerate(results['items']):
-                track = item['track']
-                artistName = track['artists'][0]['name']
-
-                result = self.sp.search(artistName)
-                track = result['tracks']['items'][0]
-                artist = self.sp.artist(track["artists"][0]["external_urls"]["spotify"])
-                genres = artist["genres"]
-
-                nameArr.append((track['name'], track['uri'].split(':')[2], genres))
-
-        
         trackList = []
         results = self.sp.user_playlist(username, uri)
         tracks = results['tracks']
-        getName(tracks, trackList)
+       
+        trackList.extend(self.getName(tracks, trackList))
         while(tracks['next']):
             tracks = self.sp.next(tracks)
-            getName(tracks, trackList)
+           
+            trackList.extend(self.getName(tracks, trackList))
 
         names = [tuple[0] for tuple in trackList]
         uris = [tuple[1] for tuple in trackList]
         genres = [tuple[2] for tuple in trackList]
 
+<<<<<<< HEAD
         return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})
     
     def getPlaylistGenre(self, songsDF):
@@ -93,12 +103,17 @@ class WrapperClass:
                     genreCounter[genre] += 1
         return genreCounter
 
+=======
+        # df = pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})   
+    
+        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})   
+>>>>>>> Updated Wrapper and Spider Plots
 
+print('Running')
 # w = WrapperClass()
 # w.doAuth()
-# print(w.getUsersPlaylists('mikeydays'))
+# w.getUsersPlaylists('mikeydays')
 # print(w.getSongsFromPlaylist('0ZB9jG1uyCbs4rnQ1V5ro6', 'mikeydays'))
-# w.getSongsFromPlaylist('')
 
 # lz_uri = 'spotify:artist:36QJpDe2go2KgaRleHCDTp'
 
