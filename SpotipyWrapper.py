@@ -103,7 +103,26 @@ class WrapperClass:
                     genreCounter[genre] += 1
         return genreCounter
 
+
+    def find_genre(self, names):
+        count = 0
+        name = names.tolist()
+        final = []
+        for i in names:
+            genres = []
+            if i ==[]:
+                final.append("")
+                continue
+            for word in i:
+                words = word.split()
+                for j in words:
+                    genres.append(j)
+            final.append(pd.Series(genres).value_counts().sort_values(ascending=False).index.tolist()[0])
+        return final
+
 print('Running')
+
+
 # w = WrapperClass()
 # w.doAuth()
 # w.getUsersPlaylists('mikeydays')
