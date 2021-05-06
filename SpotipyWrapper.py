@@ -90,8 +90,8 @@ class WrapperClass:
         uris = [tuple[1] for tuple in trackList]
         genres = [tuple[2] for tuple in trackList]
 
-<<<<<<< HEAD
-        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})
+        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})  
+
     
     def getPlaylistGenre(self, songsDF):
         genreCounter = {}
@@ -102,12 +102,6 @@ class WrapperClass:
                 else:
                     genreCounter[genre] += 1
         return genreCounter
-
-=======
-        # df = pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})   
-    
-        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})   
->>>>>>> Updated Wrapper and Spider Plots
 
 print('Running')
 # w = WrapperClass()
