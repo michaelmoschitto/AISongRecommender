@@ -81,7 +81,17 @@ class WrapperClass:
         uris = [tuple[1] for tuple in trackList]
         genres = [tuple[2] for tuple in trackList]
 
-        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})            
+        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})
+    
+    def getPlaylistGenre(self, songsDF):
+        genreCounter = {}
+        for genres in songsDF['genres']:
+            for genre in genres:
+                if genreCounter.get(genre) == None:
+                    genreCounter[genre] = 1
+                else:
+                    genreCounter[genre] += 1
+        return genreCounter
 
 
 # w = WrapperClass()
