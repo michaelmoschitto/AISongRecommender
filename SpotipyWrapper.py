@@ -104,7 +104,7 @@ class WrapperClass:
         return genreCounter
 
 
-    def find_genre(self, names):
+    def findGenre(self, names):
         count = 0
         name = names.tolist()
         final = []
@@ -119,6 +119,65 @@ class WrapperClass:
                     genres.append(j)
             final.append(pd.Series(genres).value_counts().sort_values(ascending=False).index.tolist()[0])
         return final
+
+    def getFeatures(self, songsDF):
+        names = []
+
+
+        featureList = []
+        acousticness = []
+        danceability = []
+        energy = []
+        instrumentalness = []
+        liveness = []
+        loudness = []
+        speechiness = []
+        tempo = []
+        valence = []
+        popularity = []
+        timeSignature = []
+        length = []
+
+        for index, row in songsDF.iterrows():
+            uri = row['uri']
+            if(not isinstance(uri, str)):
+                continue
+            name = row['name']
+            features = sp.audio_features(uri)
+            if features != [None]:
+                names.append(name)
+                length.append(features[0]['length'])
+                acousticness.append(features[0]['acousticness'])
+                danceability.append(features[0]['danceability'])
+                energy.append(features[0]['energy'])
+                instrumentalness.append(features[0]['instrumentalness'])
+                liveness.append(features[0]['liveness'])
+                loudness.append(features[0]['loudness'])
+                speechiness.append(features[0]['speechiness'])
+                tempo.append(features[0]['tempo'])
+                valence.append(features[0]['valence'])
+                timeSignature.append(features[0]['time_signature'])
+
+                # popularity.append(features[0]['popularity'])
+
+        data = {
+            'name': names,
+            'length': length,
+            'acousticness': acousticness,
+            'danceability': danceability,
+            'energy': energy,
+            'instrumentalness': instrumentalness,
+            'liveness': liveness,
+            'loudness': loudness,
+            'speechiness': speechiness,
+            'tempo': tempo,
+            'valence': valence,
+            'timeSignature': timeSignature
+        }
+
+        return pd.DataFrame(data)
+
+
 
 print('Running')
 
