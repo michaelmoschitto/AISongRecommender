@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd
 import sys
+from datetime import timedelta
 
 # Globals
 CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
@@ -143,10 +144,11 @@ class WrapperClass:
             if(not isinstance(uri, str)):
                 continue
             name = row['name']
-            features = sp.audio_features(uri)
+            features = self.sp.audio_features(uri)
             if features != [None]:
                 names.append(name)
-                length.append(features[0]['length'])
+                length.append(
+                    timedelta(milliseconds=features[0]['duration_ms']))
                 acousticness.append(features[0]['acousticness'])
                 danceability.append(features[0]['danceability'])
                 energy.append(features[0]['energy'])
@@ -183,6 +185,9 @@ print('Running')
 
 
 # w = WrapperClass()
+
+# songsDF = pd.read_csv('./Data/mikeydays/country/SongDF.csv')
+# print(w.getFeatures(songsDF))
 # w.doAuth()
 # w.getUsersPlaylists('mikeydays')
 # print(w.getSongsFromPlaylist('0ZB9jG1uyCbs4rnQ1V5ro6', 'mikeydays'))
