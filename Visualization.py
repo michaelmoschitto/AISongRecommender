@@ -88,11 +88,11 @@ class Viz:
         return alt.Chart(source).mark_bar().encode(x='index', y='Mean')
 
 
-audioFeaturesDF = pd.read_csv('./Data/mikeydays/country/SongFeatures.csv')
-viz = Viz()
-# print(viz.spiders(audioFeaturesDF[:64], 8).show())
+# audioFeaturesDF = pd.read_csv('./Data/mikeydays/country/SongFeatures.csv')
+# viz = Viz()
+# # print(viz.spiders(audioFeaturesDF[:64], 8).show())
 
 
-new_ax = plt.subplot(111, polar=True)
-new_ax.set_yticklabels([])
-print(viz.createSpider(audioFeaturesDF[:], 5, 0, new_ax, 8, True).show())
+# new_ax = plt.subplot(111, polar=True)
+# new_ax.set_yticklabels([])
+# print(viz.createSpider(audioFeaturesDF[:], 5, 0, new_ax, 8, True).show())
