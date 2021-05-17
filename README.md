@@ -1,7 +1,7 @@
 # AISongRecommender
 A neural net that uses mood and genre to recommend the perfect song.
 
-##Goal
+## Goal
    1) Predict the mood of a songs with 80% accuracy 
    2) Create a playlist of songs all with a target mood
    3) Create a playlist of songs with a target mood from a specific genre
