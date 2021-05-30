@@ -57,7 +57,6 @@ class WrapperClass:
                 track = item['track']
                 name = track['name']
                 uri = track['uri']
-
                 artistName = track['artists'][0]['name']
 
                 result = self.sp.search(artistName)
@@ -66,7 +65,7 @@ class WrapperClass:
                 genres = artist["genres"]
                
 
-                tl.append((name, uri.split(':')[2], genres))
+                tl.append((name, uri.split(':')[2], genres, artistName))
 
             return tl
     
@@ -90,8 +89,9 @@ class WrapperClass:
         names = [tuple[0] for tuple in trackList]
         uris = [tuple[1] for tuple in trackList]
         genres = [tuple[2] for tuple in trackList]
+        artists = [tuple[3] for tuple in trackList]
 
-        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres})  
+        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres, 'artist' : artists})  
 
     
     def getPlaylistGenre(self, songsDF):
