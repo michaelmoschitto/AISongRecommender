@@ -187,13 +187,16 @@ class WrapperClass:
             return
         
         scope = "playlist-modify-public"
-        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='http://www.google.com/?code=None'))
+        token = 'BQDnB8O3Ne7UVzQLgE-jKPgimy670abOAyVhR7dezlF4ALuCbdgU-udUAxdaXZ_z0ZD38Ep-j9hgbKzJC_UWlDFUB-8kWKcGtZSva8kbpH2vjN6gX8LkAbAeOMD70J7aF5nd03-Z0NVk8vN8E0mdi0r-UUXHtdSy0Zo8avhPCyga067AHXjvhC5w8ws'
+        sp = spotipy.Spotify(auth=token)
+        # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='localhost:3000/callback'))
         user_id = sp.me()['id']
         print(user_id)
         
-#         return s
         sp.user_playlist_create(user_id, name, public=True)
         
+    def addSongsToPlaylist(self, playlist, songsDF):
+        pass
 # -
 
 print('Running')
@@ -218,9 +221,9 @@ print('Running')
 #     print('cover art: ' + track['album']['images'][0]['url'])
 #     print()
 
-w = WrapperClass()
-w.doAuth()
-w.createPlaylist('mikeydays', 'testPlaylist1')
+# w = WrapperClass()
+# w.doAuth()
+# w.createPlaylist('mikeydays', 'BrendanFuX')
 
 
 
