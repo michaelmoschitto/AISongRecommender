@@ -181,22 +181,22 @@ class WrapperClass:
 
         return pd.DataFrame(data)
     
-    def createPlaylist(self, userId=None, name='testPlaylist', songs=None):
-        if userId == None:
-            print('user ID needed to create playlist')
+    def createPlaylist(self, userId=None, name='testPlaylist', trackIdList=None):
+        if userId == None or trackIdList == None:
+            print('userId and track Ids cannot be None')
             return
         
         scope = "playlist-modify-public"
-        token = 'BQDnB8O3Ne7UVzQLgE-jKPgimy670abOAyVhR7dezlF4ALuCbdgU-udUAxdaXZ_z0ZD38Ep-j9hgbKzJC_UWlDFUB-8kWKcGtZSva8kbpH2vjN6gX8LkAbAeOMD70J7aF5nd03-Z0NVk8vN8E0mdi0r-UUXHtdSy0Zo8avhPCyga067AHXjvhC5w8ws'
+        token = 'BQCf658tbDmtqxHw-vsPuQBSQJbA7X1mbI78uPEQtLBYUHTUnzRV8bt-AKm_G4QWQNmq8LaiinckBNrpzCAcq1TYGQo4z5MwqhFBFx8azea7obtzzTQGpB_56MALHMEhwB0Zv0xL4nNrVDgseKXNESB-aV1xrK_qxJf2xHoB-PB_iE12Qpwv6HT7Mxc'
         sp = spotipy.Spotify(auth=token)
         # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='localhost:3000/callback'))
         user_id = sp.me()['id']
         print(user_id)
         
-        sp.user_playlist_create(user_id, name, public=True)
+        output = sp.user_playlist_create(user_id, name, public=True)
+        playlistId = output['id']
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[:50])
         
-    def addSongsToPlaylist(self, playlist, songsDF):
-        pass
 # -
 
 print('Running')
@@ -221,9 +221,11 @@ print('Running')
 #     print('cover art: ' + track['album']['images'][0]['url'])
 #     print()
 
-# w = WrapperClass()
-# w.doAuth()
-# w.createPlaylist('mikeydays', 'BrendanFuX')
+w = WrapperClass()
+w.doAuth()
+energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Energetic.csv')['uri'].values)
+# print(energeticTrackIds)
+w.createPlaylist('mikeydays', 'Brendans', energeticTrackIds)
 
 
 
