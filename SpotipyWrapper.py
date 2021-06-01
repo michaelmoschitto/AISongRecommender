@@ -3,6 +3,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd
 import sys
 from datetime import timedelta
+from spotipy.oauth2 import SpotifyOAuth
 
 # Globals
 CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
@@ -11,6 +12,7 @@ CLIENT_SECRET = 'f301225d3cc3449ba674a36ee64a1cbf'
 # Spotify Object
 sp = None
 
+# +
 class WrapperClass:
     def __init__(self):
         self.CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
@@ -18,7 +20,7 @@ class WrapperClass:
 
         self.sp = self.doAuth()
 
-    def doAuth(self):
+    def doAuth(self, scope="playlist-modify-public"):
         '''
             Funtion: Setup and initialization of credentials manager and 
             master Spotify object
@@ -178,8 +180,21 @@ class WrapperClass:
         }
 
         return pd.DataFrame(data)
-
-
+    
+    def createPlaylist(self, userId=None, name='testPlaylist', songs=None):
+        if userId == None:
+            print('user ID needed to create playlist')
+            return
+        
+        scope = "playlist-modify-public"
+        sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='http://www.google.com/?code=None'))
+        user_id = sp.me()['id']
+        print(user_id)
+        
+#         return s
+        sp.user_playlist_create(user_id, name, public=True)
+        
+# -
 
 print('Running')
 
@@ -202,6 +217,11 @@ print('Running')
 #     print('audio    : ' + track['preview_url'])
 #     print('cover art: ' + track['album']['images'][0]['url'])
 #     print()
+
+w = WrapperClass()
+w.doAuth()
+w.createPlaylist('mikeydays', 'testPlaylist1')
+
 
 
 
