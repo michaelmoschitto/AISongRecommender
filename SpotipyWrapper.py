@@ -221,11 +221,11 @@ print('Running')
 #     print('cover art: ' + track['album']['images'][0]['url'])
 #     print()
 
-w = WrapperClass()
-w.doAuth()
-energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Energetic.csv')['uri'].values)
-# print(energeticTrackIds)
-w.createPlaylist('mikeydays', 'JonathansEnergeticMix', energeticTrackIds)
+# w = WrapperClass()
+# w.doAuth()
+# energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Energetic.csv')['uri'].values)
+# # print(energeticTrackIds)
+# w.createPlaylist('mikeydays', 'JonathansEnergeticMix', energeticTrackIds)
 
 
 
