@@ -187,7 +187,7 @@ class WrapperClass:
             return
         
         scope = "playlist-modify-public"
-        token = 'BQCf658tbDmtqxHw-vsPuQBSQJbA7X1mbI78uPEQtLBYUHTUnzRV8bt-AKm_G4QWQNmq8LaiinckBNrpzCAcq1TYGQo4z5MwqhFBFx8azea7obtzzTQGpB_56MALHMEhwB0Zv0xL4nNrVDgseKXNESB-aV1xrK_qxJf2xHoB-PB_iE12Qpwv6HT7Mxc'
+        token = 'BQCDd8cZBO9GucWPIDxlPQn3lgcAC7TMW_Vp5gkFFIg_eUtYe0Y-KoUavVYRhhUt1QsmKaImqsqdLpmgwlsS2rcgrzRT3cviD95eDO7W-I9o3rw32BqBWXfyecM0n1F6g3ejoH44R4RI_MvpoSajOFwf1fVs7ShDOahu8O6t0dWLuNCBCXvAz0Re45g'
         sp = spotipy.Spotify(auth=token)
         # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='localhost:3000/callback'))
         user_id = sp.me()['id']
@@ -223,9 +223,9 @@ print('Running')
 
 # w = WrapperClass()
 # w.doAuth()
-# energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Energetic.csv')['uri'].values)
+# energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Sad.csv')['uri'].values)
 # # print(energeticTrackIds)
-# w.createPlaylist('mikeydays', 'JonathansEnergeticMix', energeticTrackIds)
+# w.createPlaylist('mikeydays', 'Dr.AsSadMix', energeticTrackIds)
 
 
 
