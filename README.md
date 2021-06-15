@@ -62,15 +62,16 @@ We were able to produce data frames of songs labeled with moods as seen below.
 ![Alt text](https://github.com/michaelmoschitto/AISongRecommender/blob/main/Data/Visualizations/Results.png?raw=true "Title")
 
 ## Listen to the Results!
-The best way to validate our results is to actually listen to the playlists created. They can be found on mikeydays Spotify account and are linked below!
+The best way to validate our results is to actually listen to the playlists created. Below are the mood based playlists 
+created for Cal Poly data science professor Paul Anderson.
 
-Calm: https://open.spotify.com/playlist/2D95LpUtwJqVYN1NG4rM8S
+Dr.AsCalmMix: https://open.spotify.com/playlist/2D95LpUtwJqVYN1NG4rM8S
 
-Energetic: https://open.spotify.com/playlist/37XoFkuajvPUsLZfidsFAP
+Dr.AsEnergeticMix: https://open.spotify.com/playlist/37XoFkuajvPUsLZfidsFAP
 
-Happy: https://open.spotify.com/playlist/5FsxoaKvSUZyl9noSlYlwx
+Dr.AsHappyMix: https://open.spotify.com/playlist/5FsxoaKvSUZyl9noSlYlwx
 
-Sad: https://open.spotify.com/playlist/4J6O4ytzIfPzjCIgToiEkY
+Dr.AsSadMix: https://open.spotify.com/playlist/4J6O4ytzIfPzjCIgToiEkY
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
