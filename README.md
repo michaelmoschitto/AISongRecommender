@@ -66,6 +66,12 @@ accuracies in the mid 90's.
    
    Valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
    Tempo: The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, the tempo is the speed or pace of a given piece and derives directly from the average beat duration.
+   
+## Results 
+Despite the accuracy not being in the 80's or 90's, we were able to achieve great results. 
+We were able to produce data frames of songs labeled with moods as seen below.
+
+![Alt text](relative/path/to/img.jpg?raw=true "Title")
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
