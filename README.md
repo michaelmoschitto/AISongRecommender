@@ -65,8 +65,11 @@ We were able to produce data frames of songs labeled with moods as seen below.
 The best way to validate our results is to actually listen to the playlists created. They can be found on mikeydays Spotify account and are linked below!
 
 Calm: https://open.spotify.com/playlist/2D95LpUtwJqVYN1NG4rM8S
+
 Energetic: https://open.spotify.com/playlist/37XoFkuajvPUsLZfidsFAP
+
 Happy: https://open.spotify.com/playlist/5FsxoaKvSUZyl9noSlYlwx
+
 Sad: https://open.spotify.com/playlist/4J6O4ytzIfPzjCIgToiEkY
 
 ## Contributing
