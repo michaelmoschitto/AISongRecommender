@@ -1,16 +1,26 @@
 # AISongRecommender
 A neural net that uses mood and genre to recommend the perfect song.
 
-## Goal
-   1) Predict the mood of a songs with 80% accuracy 
-   2) Create a playlist of songs all with a target mood
-   3) Create a playlist of songs with a target mood from a specific genre
+
 
 ## Libraries
 
 ```python
+import pandas as pd
+import numpy as np
+import altair as alt
+import matplotlib.pyplot as plt
 import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 from spotipy.oauth2 import SpotifyClientCredentials
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.wrappers.scikit_learn import KerasClassifier
+from keras.utils import np_utils
+from sklearn.model_selection import cross_val_score, KFold
 import face_recognition
 
 ```
