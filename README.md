@@ -71,7 +71,7 @@ accuracies in the mid 90's.
 Despite the accuracy not being in the 80's or 90's, we were able to achieve great results. 
 We were able to produce data frames of songs labeled with moods as seen below.
 
-![Alt text](relative/path/to/img.jpg?raw=true "Title")
+![Alt text](https://github.com/michaelmoschitto/AISongRecommender/blob/main/Data/Visualizations/Results.png?raw=true "Title")
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
