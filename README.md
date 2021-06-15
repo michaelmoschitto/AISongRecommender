@@ -44,6 +44,9 @@ created by various Spotify users. The testing set is an aggregation of songs fro
 
 All data engineering related code can be found in the SpotifyWrapper.py file.
 
+Here is a snapshot of our final training set: 
+![Alt text](https://github.com/michaelmoschitto/AISongRecommender/blob/main/Data/Visualizations/TrainingData.png?raw=true "Title")
+
 ## Model
 The Model is a Keras sequential classifier with 10 input features and 4 outputs (Happy, Sad, Calm, Energetic). It features
 two dense layers with relu and softmax activation functions and the Adam optimizer. When classifying all 4 moods the model ranged from 
