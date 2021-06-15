@@ -44,7 +44,7 @@ created by various Spotify users. The testing set is an aggregation of songs fro
 
 All data engineering related code can be found in the SpotifyWrapper.py file.
 
-Here is a snapshot of our final training set: 
+Final training set: 
 ![Alt text](https://github.com/michaelmoschitto/AISongRecommender/blob/main/Data/Visualizations/TrainingData.png?raw=true "Title")
 
 ## Model
