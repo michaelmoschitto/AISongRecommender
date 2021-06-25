@@ -4,19 +4,28 @@ import pandas as pd
 import sys
 from datetime import timedelta
 from spotipy.oauth2 import SpotifyOAuth
+import json
 
 # Globals
-CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
-CLIENT_SECRET = 'f301225d3cc3449ba674a36ee64a1cbf'
+# CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
+# CLIENT_SECRET = 'f301225d3cc3449ba674a36ee64a1cbf'
+# ------Michael's ^^------
 
+CLIENT_ID = 'dc047bd4521147558724b09377f6ea08'
+CLIENT_SECRET = 'd5b1793f01504e61ba3effe63af5b89f'
 # Spotify Object
 sp = None
 
 # +
 class WrapperClass:
     def __init__(self):
-        self.CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
-        self.CLIENT_SECRET = 'f301225d3cc3449ba674a36ee64a1cbf'
+        # self.CLIENT_ID = '57a43e229eb045f7902cfb5a723d0e59'
+        # self.CLIENT_SECRET = 'f301225d3cc3449ba674a36ee64a1cbf'
+        # ------Michael's ^^------
+
+        self.CLIENT_ID = 'dc047bd4521147558724b09377f6ea08'
+        self.CLIENT_SECRET = 'd5b1793f01504e61ba3effe63af5b89f'
+
 
         self.sp = self.doAuth()
 
@@ -52,7 +61,7 @@ class WrapperClass:
         return pd.DataFrame({'name' : playlistNames, 'uri' : playlistUris}, \
          columns=['name', 'uri'])
 
-    def getName(self, results, nameArr):
+    def getName(self, results, nameArr, sp):
             tl = []
             for i, item in enumerate(results['items']):
                 
@@ -61,9 +70,9 @@ class WrapperClass:
                 uri = track['uri']
                 artistName = track['artists'][0]['name']
 
-                result = self.sp.search(artistName)
+                result = sp.search(artistName)
                 track = result['tracks']['items'][0]
-                artist = self.sp.artist(track["artists"][0]["external_urls"]["spotify"])
+                artist = sp.artist(track["artists"][0]["external_urls"]["spotify"])
                 genres = artist["genres"]
                
 
@@ -93,7 +102,37 @@ class WrapperClass:
         genres = [tuple[2] for tuple in trackList]
         artists = [tuple[3] for tuple in trackList]
 
-        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres, 'artist' : artists})  
+        return pd.DataFrame(data={'name' : names, 'uri' : uris, 'genres': genres, 'artist' : artists}) 
+
+    def getMySavedSongs(self):
+        ''' 
+            Function: Get all of current users saved (liked) songs
+
+            Returns: Dataframe containing [song name, uri]
+        '''
+        token = 'BQBwpaZkZ5h2NuAlgepObTSrEJPHVgV9YffJsNZZgQ0wPKgFoJ12RCrsboFtINQEd6ywXK050P4gUbQ_77GiM5ZTVn_G1_3YroZUgWWht87B4Qg_QOmcYdi-8gOhaz0HEdrxpnO952WLUTaW-sfiQgOu5K8ME3LChkwWihuLNzSZoEHr1vw7VPhnvl7eqTmgvkM'
+        sp = spotipy.Spotify(auth=token)
+
+        trackList = []
+        tracks = sp.current_user_saved_tracks()
+        items = tracks['items']
+
+        with open('NateOut.txt', 'w') as outfile:
+            json.dump(items[0], outfile)
+        # print(items)
+        # return 
+        trackList.extend(self.getName(tracks, trackList, sp))
+        while(tracks['next']):
+            tracks = sp.next(tracks)
+
+            trackList.extend(self.getName(tracks, trackList, sp))
+
+        names = [tuple[0] for tuple in trackList]
+        uris = [tuple[1] for tuple in trackList]
+        genres = [tuple[2] for tuple in trackList]
+        artists = [tuple[3] for tuple in trackList]
+
+        return pd.DataFrame(data={'name': names, 'uri': uris, 'genres': genres, 'artist': artists})
 
     
     def getPlaylistGenre(self, songsDF):
@@ -187,7 +226,7 @@ class WrapperClass:
             return
         
         scope = "playlist-modify-public"
-        token = 'BQCDd8cZBO9GucWPIDxlPQn3lgcAC7TMW_Vp5gkFFIg_eUtYe0Y-KoUavVYRhhUt1QsmKaImqsqdLpmgwlsS2rcgrzRT3cviD95eDO7W-I9o3rw32BqBWXfyecM0n1F6g3ejoH44R4RI_MvpoSajOFwf1fVs7ShDOahu8O6t0dWLuNCBCXvAz0Re45g'
+        token = 'BQAl3KYPddHApFUF6JCSoGNNTwWMXsBO3b-oDPj3D6wYseqhwcfmcc3uqpwq41zAMTu22OI4k31wcHFVia9NoJ_DIVo-SblDi1ywAjnhYqpNxcsBzMxhV5GX8nPomdkn0p1AJtsO3mlP8G-pLiTqQWhgRjiXgLOlhrLLJShQtGDXDKF-EYvk3Akn3VHEHaTMoBE'
         sp = spotipy.Spotify(auth=token)
         # sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, scope=scope, redirect_uri='localhost:3000/callback'))
         user_id = sp.me()['id']
@@ -195,11 +234,30 @@ class WrapperClass:
         
         output = sp.user_playlist_create(user_id, name, public=True)
         playlistId = output['id']
-        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[:50])
+
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[:99])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[99:188])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[188:287])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[287:386])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[386:485])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[485:584])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[584:684])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[684:783])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[783:882])
+        sp.user_playlist_add_tracks(user_id, playlistId, trackIdList[882:])
+
+
+
+
+
+
+
+
+
         
 # -
 
-print('Running')
+# print('Running')
 
 
 # w = WrapperClass()
@@ -221,12 +279,32 @@ print('Running')
 #     print('cover art: ' + track['album']['images'][0]['url'])
 #     print()
 
+# -------------Write Songs to Spotify-------------
 # w = WrapperClass()
 # w.doAuth()
-# energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Sad.csv')['uri'].values)
+# energeticTrackIds = list(pd.read_csv('./Data/mikeydays/Calm.csv')['uri'].values)
 # # print(energeticTrackIds)
-# w.createPlaylist('mikeydays', 'Dr.AsSadMix', energeticTrackIds)
+# w.createPlaylist('mikeydays', 'PetesCalmSongs', energeticTrackIds)
+# -----------------------------------------------------------------
+
+
+# w = WrapperClass()
+# # w.doAuth()
+# outDF = w.getMySavedSongs()
+# outDF.to_csv('NatesDF.csv', index=False)
 
 
 
 
+# tracks = results['tracks']
+
+# print(results)
+# # print(access_token)
+
+w = WrapperClass()
+w.doAuth()
+URIs = list(pd.read_csv('./NateData/EverythingElse.csv')['uri'].values)
+print(URIs)
+print(len(URIs))
+# print(energeticTrackIds)
+w.createPlaylist('natefay', 'Errythang Else', URIs)
