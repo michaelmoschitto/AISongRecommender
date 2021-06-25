@@ -74,6 +74,4 @@ The model was able to do this at ~76% accuracy with an F1 of ~73%.
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
-
 
