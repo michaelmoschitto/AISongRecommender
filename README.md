@@ -67,7 +67,7 @@ Dr.AsHappyMix: https://open.spotify.com/playlist/5FsxoaKvSUZyl9noSlYlwx
 
 Dr.AsSadMix: https://open.spotify.com/playlist/4J6O4ytzIfPzjCIgToiEkY
 
-But if you just know this was our final output, a measure of how likely each song was to align with a certain mood. 
+**But if you must know** this was our final output, a measure of how likely each song was to align with a certain mood. 
 ![Alt text](https://github.com/michaelmoschitto/AISongRecommender/blob/main/Data/Visualizations/Results.png?raw=true "Title")
 The model was able to do this at ~76% with an F1 of ~73%.
 
